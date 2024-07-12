@@ -10,8 +10,26 @@ internal class Program
         SQLiteConnection connection = null;
         try
         {
-            connection = new SQLiteConnection("Data Source = C:\\DatabaseTest\\chinook.db;");
+            connection = new SQLiteConnection("Data Source=C:\\Users\\ejber\\AppData\\Roaming\\LINQPad\\ChinookDemoDb.sqlite");
             connection.Open();
+            var transaction = connection.BeginTransaction();
+
+            SQLiteCommand command = connection.CreateCommand();
+            command.CommandText = "SELECT * " +
+                                  "FROM Invoice invoice " + 
+                                  "JOIN InvoiceLine line ON invoice.InvoiceId = line.InvoiceLineId " +
+                                  "WHERE invoice.BillingState is null";
+            var reader = command.ExecuteReader(System.Data.CommandBehavior.Default);
+            List<string> columns = new List<string>();
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                columns.Add(reader.GetName(i));
+            }
+            foreach (var row in reader)
+            {
+                string rowValue = row.ToString();
+                Console.WriteLine(rowValue);
+            }
         }
         
         catch(Exception ex)
@@ -26,6 +44,6 @@ internal class Program
             }
         }
 
-        Console.WriteLine("Hello, World!");
+        Console.ReadLine();
     }
 }
