@@ -9,6 +9,12 @@ internal class Program
 {
     static void Main(string[] args)
     {
+        if (args.Length == 0)
+        {
+            throw new ArgumentException("Must provide output path");
+        }
+        string pathToDesiredOutputLocation = Path.GetFullPath(args[0]);
+        //string pathToDesiredOutputLocation = @"C:\DatabaseTest\Output.csv";
         SQLiteConnection connection = null;
         try
         {
@@ -37,10 +43,13 @@ internal class Program
                     Console.WriteLine($"Current column: {currentColumn}");
                     columns.Add(currentColumn);
                 }
-                List<string> ouput = new List<string>();
+                List<List<string>> rows = new List<List<string>>();
+                List<string> currentRow = null;
                 string temp = string.Empty;
                 while (reader.Read())
                 {
+                    currentRow = new List<string>();
+                    rows.Add(currentRow);
                     for (int i = 0; i < columns.Count; i++)
                     {
                         temp = reader.GetValue(i).ToString();
@@ -49,12 +58,12 @@ internal class Program
                         {
                             Console.Write(", ");
                         }
-                        ouput.Add(temp);
+                        currentRow.Add(temp);
                     }
                     Console.WriteLine();
                 }
 
-
+                WriteCSV(columns, rows, pathToDesiredOutputLocation);
 
                 //foreach (var row in reader)
                 //{
@@ -77,6 +86,50 @@ internal class Program
         //}
 
         Console.ReadLine();
+    }
+
+    private static void WriteCSV(List<string> columns, List<List<string>> rows, string outputLocation)
+    {
+        if(columns == null)
+        {
+            throw new NullReferenceException($"{nameof(columns)} cannot be null");
+        }
+        if (rows == null)
+        {
+            throw new NullReferenceException($"{nameof(rows)} cannot be null");
+        }
+        if (outputLocation == null)
+        {
+            throw new NullReferenceException($"{nameof(outputLocation)} cannot be null, specify a path");
+        }
+
+        using (StreamWriter streamWriter = File.CreateText(outputLocation))
+        {
+            for (int i = 0; i < columns.Count; i++)
+            {
+                streamWriter.Write(columns[i]);
+                if (i != columns.Count - 1)
+                {
+                    streamWriter.Write(",");
+                }
+            }
+            streamWriter.WriteLine();
+            foreach(List<string> row in rows)
+            {
+                for (int i = 0; i < row.Count; i++)
+                {
+                    streamWriter.Write(row[i]);
+                    if (i != row.Count - 1)
+                    {
+                        streamWriter.Write(",");
+                    }
+                    else
+                    {
+                        streamWriter.WriteLine();
+                    }
+                }
+            }
+        }
     }
 
 
