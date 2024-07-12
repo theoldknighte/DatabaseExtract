@@ -11,10 +11,12 @@ internal class Program
     {
         if (args.Length == 0)
         {
+            Console.WriteLine("Must provide output path");
+            Console.ReadLine();
             throw new ArgumentException("Must provide output path");
         }
         string pathToDesiredOutputLocation = Path.GetFullPath(args[0]);
-        //string pathToDesiredOutputLocation = @"C:\DatabaseTest\Output.csv";
+        //string pathToDesiredOutputLocation = @"C:\DatabaseTest\DefaultArgsOutput.csv";
         SQLiteConnection connection = null;
         try
         {

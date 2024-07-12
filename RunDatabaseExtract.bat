@@ -1,0 +1,1 @@
+C:\Source\DatabaseExtract\DatabaseExtract\bin\Debug\net8.0\DatabaseExtract.exe "C:\DatabaseTest\RunFromBAT.csv"

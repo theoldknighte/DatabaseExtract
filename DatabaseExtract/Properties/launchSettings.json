@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "DatabaseExtract": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\DatabaseTest\\DefaultArgsOutput.csv"
+    }
+  }
+}
